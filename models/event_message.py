@@ -42,24 +42,24 @@ class EventMessage:
 
         return message_text
 
-    def page_count(self) -> int:
+    def __page_count(self) -> int:
         return len(self._event_pages)
 
-    @staticmethod
-    def get_empty_message_text() -> str:
-        return "Мероприятия не найдены!"
-
     def get_message_text(self, page: int) -> str:
-        if page > self.page_count() - 1 or page < -self.page_count():
-            return self.get_empty_message_text()
+        if page > self.__page_count() - 1 or page < -self.__page_count():
+            return "Мероприятия не найдены!"
         if self.is_digest:
             return self.__get_digest_message_text(self._event_pages[page])
         else:
             return self.__get_detailed_message_text(self._event_pages[page])
 
     def create_keyboard(self, callback_name: str) -> InlineKeyboardMarkup:
-        self._keyboard = PaginationKeyboard(callback_name, self.page_count())
+        self._keyboard = PaginationKeyboard(callback_name, self.__page_count())
         return self._keyboard.create_keyboard()
 
     def change_keyboard_page(self, callback_text: str) -> InlineKeyboardMarkup:
+        if self._keyboard is None:
+            callback_name = PaginationKeyboard.get_call_name_from_callback(callback_text)
+            self._keyboard = PaginationKeyboard(callback_name, self.__page_count())
+
         return self._keyboard.change_page(callback_text)

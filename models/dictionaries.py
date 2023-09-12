@@ -28,3 +28,9 @@ topic2domain = {
     "party": "party",
     "standup": "standup",
 }
+
+topic2pre_speech = {
+    "expo": "Выставки:",
+    "party": "Вечеринки:",
+    "standup": "StandUp:",
+}

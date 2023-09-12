@@ -14,6 +14,14 @@ class PaginationKeyboard:
 
         return keyboard
 
+    @staticmethod
+    def get_current_page_from_callback(callback_text: str) -> int:
+        return int(callback_text.split("|")[2])
+
+    @staticmethod
+    def get_call_name_from_callback(callback_text: str) -> str:
+        return callback_text.split("|")[0]
+
     def change_page(self, callback_text: str) -> InlineKeyboardMarkup:
         callback_data = callback_text.split("|")
         callback_name = callback_data[0]
@@ -25,7 +33,7 @@ class PaginationKeyboard:
             if cur_page < self._n_pages - 2:
                 next_page_button = InlineKeyboardButton("Далее", callback_data=f"{callback_name}|next|{cur_page + 1}")
                 prev_page_button = InlineKeyboardButton("Назад", callback_data=f"{callback_name}|prev|{cur_page + 1}")
-                pagination_button = InlineKeyboardButton(f"{cur_page + 2}/{self._n_pages}")
+                pagination_button = InlineKeyboardButton(f"{cur_page + 2}/{self._n_pages}", callback_data="echo")
                 keyboard.add(prev_page_button, pagination_button, next_page_button)
             else:
                 prev_page_button = InlineKeyboardButton("Назад", callback_data=f"{callback_name}|prev|{cur_page + 1}")
@@ -34,7 +42,7 @@ class PaginationKeyboard:
             if cur_page > 1:
                 next_page_button = InlineKeyboardButton("Далее", callback_data=f"{callback_name}|next|{cur_page - 1}")
                 prev_page_button = InlineKeyboardButton("Назад", callback_data=f"{callback_name}|prev|{cur_page - 1}")
-                pagination_button = InlineKeyboardButton(f"{cur_page}/{self._n_pages}")
+                pagination_button = InlineKeyboardButton(f"{cur_page}/{self._n_pages}", callback_data="echo")
                 keyboard.add(prev_page_button, pagination_button, next_page_button)
             else:
                 next_page_button = InlineKeyboardButton("Далее", callback_data=f"{callback_name}|next|{cur_page - 1}")
