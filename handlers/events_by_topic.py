@@ -3,14 +3,18 @@ from telebot.types import CallbackQuery
 from models.dictionaries import topic2domain, topic2pre_speech
 from models.event_message import EventMessage
 from models.pagination_keyboard import PaginationKeyboard
-from utils.dao import get_event_ids_by_domain_name, get_events_by_ids
+from utils.dao import get_event_ids_by_domain_name, get_events_by_ids, log_action
 
 
 def run(bot):
     @bot.message_handler(commands=["expo", "party", "standup"])
     async def get_events_by_topic(message):
-        domain = topic2domain[message.text[1:]]
-        pre_speech = topic2pre_speech[message.text[1:]]
+        topic = message.text[1:]
+
+        log_action(message.from_user.username, message.from_user.id, topic)
+
+        domain = topic2domain[topic]
+        pre_speech = topic2pre_speech[topic]
 
         event_ids = get_event_ids_by_domain_name(domain)
         events = get_events_by_ids(event_ids)

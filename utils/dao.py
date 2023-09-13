@@ -44,6 +44,21 @@ def db_query(query: str):
             connection.close()
 
 
+def db_insert(query: str):
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute(query)
+        connection.commit()
+    except (Exception, Error) as error:
+        print("Ошибка при работе с PostgreSQL", error)
+        return None
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
+
+
 def get_event_ids_by_domain_name(domain_name: str) -> list[int]:
     domain_id = db_query(f"SELECT id FROM domain WHERE name = '{domain_name}'")[0][0]
     event_ids = db_query(f"SELECT e_id FROM event_domain WHERE d_id = {domain_id}")
@@ -96,3 +111,8 @@ def get_providers() -> list[Provider]:
             active=provider[8]
         ))
     return providers
+
+
+def log_action(username, user_id, action):
+    db_insert("INSERT INTO user_log (username, user_id, action) "
+              f"VALUES ('{username}', {user_id}, '{action}')")

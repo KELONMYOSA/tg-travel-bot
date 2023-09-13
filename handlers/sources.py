@@ -1,9 +1,11 @@
-from utils.dao import get_providers
+from utils.dao import get_providers, log_action
 
 
 def run(bot):
     @bot.message_handler(commands=["sources"])
     async def sources(message):
+        log_action(message.from_user.username, message.from_user.id, message.text[1:])
+
         providers = get_providers()
         sources_text = "Список источников:\n"
         for provider in providers:
