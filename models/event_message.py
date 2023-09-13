@@ -20,9 +20,11 @@ class EventMessage:
     def __get_digest_message_text(events: list[Event]) -> str:
         message_text = ""
         for event in events:
+            place_text = ('\n📍 ' + event.place) if event.place else ''
             message_text += \
                 f"\n\n🦄️ <a href='{event.url}'>{event.title}</a>" \
-                f"\n🗓 {event.get_date_string()} {event.place}" \
+                f"\n🗓 {event.get_date_string()}" \
+                f"{place_text}" \
                 f"\n{event.short_desc}"
 
         message_text = message_text[2:]
@@ -35,7 +37,8 @@ class EventMessage:
         for event in events:
             message_text += \
                 f"\n\n🦄️ <a href='{event.url}'>{event.title}</a>" \
-                f"\n🗓 {event.get_date_string()} {event.place}" \
+                f"\n🗓 {event.get_date_string()}" \
+                f"\n📍 {event.place}" \
                 f"\n{event.long_desc}"
 
         message_text = message_text[2:]

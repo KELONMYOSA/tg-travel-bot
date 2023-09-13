@@ -9,8 +9,6 @@ from utils.dao import get_event_ids_by_domain_name, get_events_by_ids
 def run(bot):
     @bot.message_handler(commands=["expo", "party", "standup"])
     async def get_events_by_topic(message):
-        await bot.delete_message(message.chat.id, message.message_id - 1)
-
         domain = topic2domain[message.text[1:]]
         pre_speech = topic2pre_speech[message.text[1:]]
 

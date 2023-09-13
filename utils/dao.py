@@ -5,6 +5,7 @@ from psycopg2 import Error
 from dotenv import load_dotenv, find_dotenv
 
 from models.event import Event
+from models.provider import Provider
 
 load_dotenv(find_dotenv())
 DATABASE_NAME = os.environ.get('DATABASE_NAME')
@@ -53,7 +54,9 @@ def get_event_ids_by_domain_name(domain_name: str) -> list[int]:
 
 
 def get_events_by_ids(event_ids: list[int]) -> list[Event]:
-    events_result = db_query(f"SELECT * FROM event WHERE id IN ({str(event_ids)[1:-1]})")
+    events_result = db_query(f"SELECT * FROM event "
+                             f"WHERE id IN ({str(event_ids)[1:-1]}) AND date > '2023-09-01' "
+                             f"ORDER BY date")
     events = []
     for event in events_result:
         events.append(Event(
@@ -75,3 +78,21 @@ def get_events_by_ids(event_ids: list[int]) -> list[Event]:
             active=event[15]
         ))
     return events
+
+
+def get_providers() -> list[Provider]:
+    provider_result = db_query("SELECT * FROM provider")
+    providers = []
+    for provider in provider_result:
+        providers.append(Provider(
+            id=provider[0],
+            url=provider[1],
+            name=provider[2],
+            description=provider[3],
+            city=provider[4],
+            address=provider[5],
+            contacts=provider[6],
+            date_add=provider[7],
+            active=provider[8]
+        ))
+    return providers

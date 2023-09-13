@@ -16,7 +16,11 @@ class PaginationKeyboard:
 
     @staticmethod
     def get_current_page_from_callback(callback_text: str) -> int:
-        return int(callback_text.split("|")[2])
+        callback_data = callback_text.split("|")
+        if callback_data[1] == "next":
+            return int(callback_text.split("|")[2]) + 1
+        else:
+            return int(callback_text.split("|")[2]) - 1
 
     @staticmethod
     def get_call_name_from_callback(callback_text: str) -> str:

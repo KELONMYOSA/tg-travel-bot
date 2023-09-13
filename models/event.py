@@ -26,7 +26,10 @@ class Event:
         self.active = active
 
     def get_date_string(self) -> str:
-        date = self.time_b
+        if self.time_b is None:
+            date = self.date
+        else:
+            date = self.time_b
         now_day_number = date.weekday()
         short_str_day = days_map[now_day_number]
         month = month_map[date.month]
